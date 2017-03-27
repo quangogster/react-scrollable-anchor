@@ -3,29 +3,34 @@ import { debounce } from './utils/func'
 import { getBestAnchorGivenScrollLocation } from './utils/scroll'
 import { getHash, updateHash, removeHash } from './utils/hash'
 
+const defaultContainer = window;
+
 const defaultConfig = {
   offset: 0,
   scrollDuration: 400,
+  container: defaultContainer
 }
+
 
 class Manager {
   constructor() {
     this.anchors = {}
     this.forcedHash = false
     this.config = defaultConfig
+    this.container = this.config.container;
 
     this.scrollHandler = debounce(this.handleScroll, 250)
     this.forceHashUpdate = debounce(this.handleHashChange, 1)
   }
 
   addListeners = () => {
-    window.addEventListener('scroll', this.scrollHandler, false)
-    window.addEventListener('hashchange', this.handleHashChange)
+    this.config.container.addEventListener('scroll', this.scrollHandler, false)
+    this.config.container.addEventListener('hashchange', this.handleHashChange)
   }
 
   removeListeners = () => {
-    window.removeEventListener('scroll', this.scrollHandler, false)
-    window.removeEventListener('hashchange', this.handleHashChange)
+    this.config.container.removeEventListener('scroll', this.scrollHandler, false)
+    this.config.container.removeEventListener('hashchange', this.handleHashChange)
   }
 
   configure = (config) => {
@@ -33,11 +38,12 @@ class Manager {
       ...defaultConfig,
       ...config,
     }
+    this.config.container = this.config.container;
   }
 
   goToTop = () => {
     this.forcedHash = true
-    window.scroll(0,0)
+    (container).scroll(0,0)
     removeHash()
   }
 
