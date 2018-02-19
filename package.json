@@ -1,6 +1,6 @@
 {
   "name": "react-scrollable-anchor",
-  "version": "0.4.1",
+  "version": "0.6.2",
   "description": "Provide smooth scrolling anchors in React.",
   "main": "lib/index.js",
   "files": [
@@ -43,11 +43,12 @@
   },
   "homepage": "https://github.com/gabergg/react-scrollable-anchor",
   "dependencies": {
-    "jump.js": "1.0.1"
+    "jump.js": "1.0.2",
+    "prop-types": "^15.5.10"
   },
   "peerDependencies": {
-    "react": "^15.3.0",
-    "react-dom": "^15.3.0"
+    "react": "^15.3.0 || ^16.0.0",
+    "react-dom": "^15.3.0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

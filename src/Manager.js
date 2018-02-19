@@ -1,6 +1,6 @@
 import jump from 'jump.js'
 import { debounce } from './utils/func'
-import { getBestAnchorGivenScrollLocation } from './utils/scroll'
+import { getBestAnchorGivenScrollLocation, getScrollTop } from './utils/scroll'
 import { getHash, updateHash, removeHash } from './utils/hash'
 
 const defaultContainer = window;
@@ -8,7 +8,8 @@ const defaultContainer = window;
 const defaultConfig = {
   offset: 0,
   scrollDuration: 400,
-  container: defaultContainer
+  container: defaultContainer,
+  keepLastAnchorHash: false,
 }
 
 
@@ -19,7 +20,7 @@ class Manager {
     this.config = defaultConfig
     this.container = this.config.container;
 
-    this.scrollHandler = debounce(this.handleScroll, 250)
+    this.scrollHandler = debounce(this.handleScroll, 100)
     this.forceHashUpdate = debounce(this.handleHashChange, 1)
   }
 
@@ -42,6 +43,7 @@ class Manager {
   }
 
   goToTop = () => {
+    if (getScrollTop() === 0) return
     this.forcedHash = true
     (container).scroll(0,0)
     removeHash()
@@ -65,13 +67,13 @@ class Manager {
   }
 
   handleScroll = () => {
-    const {offset} = this.config
+    const {offset, keepLastAnchorHash} = this.config
     const bestAnchorId = getBestAnchorGivenScrollLocation(this.anchors, offset)
 
     if (bestAnchorId && getHash() !== bestAnchorId) {
       this.forcedHash = true
       updateHash(bestAnchorId, false)
-    } else if (!bestAnchorId) {
+    } else if (!bestAnchorId && !keepLastAnchorHash) {
       removeHash()
     }
   }
