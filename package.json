@@ -43,8 +43,8 @@
   },
   "homepage": "https://github.com/gabergg/react-scrollable-anchor",
   "dependencies": {
-    "jump.js": "1.0.2",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "zenscroll": "^4.0.2"
   },
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0.0",

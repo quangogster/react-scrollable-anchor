@@ -1,4 +1,4 @@
-import jump from 'jump.js'
+import zenscroll from 'zenscroll'
 import { debounce } from './utils/func'
 import { getBestAnchorGivenScrollLocation, getScrollTop } from './utils/scroll'
 import { getHash, updateHash, removeHash } from './utils/hash'
@@ -97,19 +97,13 @@ class Manager {
   goToSection = (id) => {
     let element = this.anchors[id]
     if (element) {
-      jump(element, {
-        duration: this.config.scrollDuration,
-        offset: this.config.offset,
-      })
+      zenscroll.center(element, this.config.scrollDuration, this.config.offset)
     } else {
       // make sure that standard hash anchors don't break.
       // simply jump to them.
       element = document.getElementById(id)
       if (element) {
-        jump(element, {
-          duration: 0,
-          offset: this.config.offset,
-        })
+        zenscroll.center(element, 0, this.config.offset)
       }
     }
   }
