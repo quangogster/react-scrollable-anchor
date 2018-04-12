@@ -3,13 +3,10 @@ import { debounce } from './utils/func'
 import { getBestAnchorGivenScrollLocation, getScrollTop } from './utils/scroll'
 import { getHash, updateHash, removeHash } from './utils/hash'
 
-const defaultContainer = window;
-
 const defaultConfig = {
   offset: 0,
   scrollDuration: 400,
-  container: defaultContainer,
-  keepLastAnchorHash: false,
+  keepLastAnchorHash: false
 }
 
 
@@ -18,10 +15,18 @@ class Manager {
     this.anchors = {}
     this.forcedHash = false
     this.config = defaultConfig
-    this.container = this.config.container;
 
     this.scrollHandler = debounce(this.handleScroll, 100)
     this.forceHashUpdate = debounce(this.handleHashChange, 1)
+  }
+
+  setContainer = () => {
+    // if we have a containerId, find the scrolling container, else set it to window
+    if (this.config.containerId) {
+      this.config.container = document.getElementById(this.config.containerId)
+    } else {
+      this.config.container = window
+    }
   }
 
   addListeners = () => {
@@ -37,9 +42,8 @@ class Manager {
   configure = (config) => {
     this.config = {
       ...defaultConfig,
-      ...config,
+      ...config
     }
-    this.config.container = this.config.container;
   }
 
   goToTop = () => {
@@ -50,6 +54,10 @@ class Manager {
   }
 
   addAnchor = (id, component) => {
+    // if container is not set, set container
+    if (!this.config.container) {
+      this.setContainer()
+    }
     // if this is the first anchor, set up listeners
     if (Object.keys(this.anchors).length === 0) {
       this.addListeners()
