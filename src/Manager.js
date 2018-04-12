@@ -48,8 +48,7 @@ class Manager {
 
   goToTop = () => {
     if (getScrollTop() === 0) return
-    this.forcedHash = true
-    (container).scroll(0,0)
+    zenscroll.toY(0)
     removeHash()
   }
 
@@ -96,8 +95,10 @@ class Manager {
 
   goToSection = (id) => {
     let element = this.anchors[id]
+    let viewHeight = this.config.container.innerHeight || this.config.container.clientHeight
+    let offset = this.config.offset + viewHeight/2
     if (element) {
-      zenscroll.center(element, this.config.scrollDuration, this.config.offset)
+      zenscroll.center(element, this.config.scrollDuration, offset)
     } else {
       // make sure that standard hash anchors don't break.
       // simply jump to them.
