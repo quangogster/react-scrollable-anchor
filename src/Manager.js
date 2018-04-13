@@ -50,8 +50,8 @@ class Manager {
 
   goToTop = () => {
     if (getScrollTop(this.config.container) === 0) return
+    this.forcedHash = true
     this.config.scroller.toY(0, this.config.scrollDuration)
-    removeHash()
   }
 
   addAnchor = (id, component) => {
