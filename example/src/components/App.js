@@ -3,6 +3,7 @@ import Example1 from './Example1'
 import Example2 from './Example2'
 import Example3 from './Example3'
 import Example4 from './Example4'
+import Example5 from './Example5'
 import ScrollableAnchor, { goToTop, goToAnchor, removeHash } from '../../../src'
 
 const examples = [
@@ -10,6 +11,7 @@ const examples = [
   {id: 'example2', label: 'Example 2', component: Example2},
   {id: 'example3', label: 'Example 3', component: Example3},
   {id: 'example4', label: 'Example 4', component: Example4},
+  {id: 'example5', label: 'Example 5', component: Example5},
 ]
 
 const styles = {
