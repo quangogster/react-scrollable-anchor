@@ -1,10 +1,10 @@
-export const getScrollTop = () => {
-  return document.body.scrollTop || document.documentElement.scrollTop
+export const getScrollTop = (container) => {
+  return container.scrollTop || document.body.scrollTop || document.documentElement.scrollTop
 }
 
 // get vertical offsets of element, taking scrollTop into consideration
-export const getElementOffset = (element) => {
-  const scrollTop = getScrollTop()
+export const getElementOffset = (element, container) => {
+  const scrollTop = getScrollTop(container)
   const {top, bottom} = element.getBoundingClientRect()
   return {
     top: Math.floor(top + scrollTop),
@@ -13,17 +13,19 @@ export const getElementOffset = (element) => {
 }
 
 // does scrollTop live within element bounds?
-export const doesElementContainScrollTop = (element, extraOffset = 0) => {
-  const scrollTop = getScrollTop()
-  const offsetTop = getElementOffset(element).top + extraOffset
+export const doesElementContainScrollTop = (element, container, extraOffset = 0) => {
+  let scrollTop = getScrollTop(container)
+  const offsetTop = getElementOffset(element, container).top + extraOffset
+  // if scrolling within a container we need to add the position of the container to scrollTop
+  scrollTop += container.getBoundingClientRect ? container.getBoundingClientRect().top : 0
   return scrollTop >= offsetTop && scrollTop < offsetTop + element.offsetHeight
 }
 
 // is el2's location more relevant than el2,
 // parent-child relationship aside?
-export const checkLocationRelevance = (el1, el2) => {
-  const {top: top1, bottom: bottom1} = getElementOffset(el1)
-  const {top: top2, bottom: bottom2} = getElementOffset(el2)
+export const checkLocationRelevance = (el1, el2, container) => {
+  const {top: top1, bottom: bottom1} = getElementOffset(el1, container)
+  const {top: top2, bottom: bottom2} = getElementOffset(el2, container)
   if (top1 === top2) {
     if (bottom1 === bottom2) {
       // top and bottom of compared elements are the same,
@@ -41,11 +43,11 @@ export const checkLocationRelevance = (el1, el2) => {
 
 // check if el2 is more relevant than el1, considering child-parent
 // relationships as well as node location.
-export const checkElementRelevance = (el1, el2) => {
+export const checkElementRelevance = (el1, el2, container) => {
   if (el1.contains(el2)) {
     // el2 is child, so it gains relevance priority
     return true
-  } else if (!el2.contains(el1) && checkLocationRelevance(el1, el2)) {
+  } else if (!el2.contains(el1) && checkLocationRelevance(el1, el2, container)) {
     // el1 and el2 are unrelated, but el2 has a better location,
     // so it gains relevance priority
     return true
@@ -62,13 +64,13 @@ export const checkElementRelevance = (el1, el2) => {
 // 4. if neither node contains the other, and their top and bottom locations
 //    are the same, a node is chosen at random, in a deterministic way,
 //    to be more relevant.
-export const getBestAnchorGivenScrollLocation = (anchors, offset) => {
+export const getBestAnchorGivenScrollLocation = (anchors, offset, container) => {
   let bestId, bestElement
 
   Object.keys(anchors).forEach((id) => {
     const element = anchors[id]
-    if (doesElementContainScrollTop(element, offset)) {
-      if (!bestElement || checkElementRelevance(bestElement, element)) {
+    if (doesElementContainScrollTop(element, container, offset)) {
+      if (!bestElement || checkElementRelevance(bestElement, element, container)) {
         bestElement = element
         bestId = id
       }

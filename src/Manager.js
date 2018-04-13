@@ -24,8 +24,10 @@ class Manager {
     // if we have a containerId, find the scrolling container, else set it to window
     if (this.config.containerId) {
       this.config.container = document.getElementById(this.config.containerId)
+      this.config.scroller = zenscroll.createScroller(this.config.container, this.config.scrollDuration, this.config.offset)
     } else {
       this.config.container = window
+      this.config.scroller = zenscroll
     }
   }
 
@@ -47,8 +49,8 @@ class Manager {
   }
 
   goToTop = () => {
-    if (getScrollTop() === 0) return
-    zenscroll.toY(0)
+    if (getScrollTop(this.config.container) === 0) return
+    this.config.scroller.toY(0, this.config.scrollDuration)
     removeHash()
   }
 
@@ -75,7 +77,7 @@ class Manager {
 
   handleScroll = () => {
     const {offset, keepLastAnchorHash} = this.config
-    const bestAnchorId = getBestAnchorGivenScrollLocation(this.anchors, offset)
+    const bestAnchorId = getBestAnchorGivenScrollLocation(this.anchors, offset, this.config.container)
 
     if (bestAnchorId && getHash() !== bestAnchorId) {
       this.forcedHash = true
@@ -98,13 +100,13 @@ class Manager {
     let viewHeight = this.config.container.innerHeight || this.config.container.clientHeight
     let offset = this.config.offset + viewHeight/2
     if (element) {
-      zenscroll.center(element, this.config.scrollDuration, offset)
+      this.config.scroller.center(element, this.config.scrollDuration, offset)
     } else {
       // make sure that standard hash anchors don't break.
       // simply jump to them.
       element = document.getElementById(id)
       if (element) {
-        zenscroll.center(element, 0, this.config.offset)
+        this.config.scroller.center(element, 0, this.config.offset)
       }
     }
   }
