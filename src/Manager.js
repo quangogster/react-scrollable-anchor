@@ -33,12 +33,12 @@ class Manager {
 
   addListeners = () => {
     this.config.container.addEventListener('scroll', this.scrollHandler, false)
-    this.config.container.addEventListener('hashchange', this.handleHashChange)
+    window.addEventListener('hashchange', this.handleHashChange)
   }
 
   removeListeners = () => {
     this.config.container.removeEventListener('scroll', this.scrollHandler, false)
-    this.config.container.removeEventListener('hashchange', this.handleHashChange)
+    window.removeEventListener('hashchange', this.handleHashChange)
   }
 
   configure = (config) => {
