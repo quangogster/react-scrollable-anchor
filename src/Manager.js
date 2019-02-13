@@ -1,6 +1,6 @@
 import zenscroll from 'zenscroll'
 import { debounce } from './utils/func'
-import { getBestAnchorGivenScrollLocation, getScrollTop } from './utils/scroll'
+import { getBestAnchorGivenScrollLocation, getScrollTop, getOffsetTopToBody } from './utils/scroll'
 import { getHash, updateHash, removeHash } from './utils/hash'
 
 const defaultConfig = {
@@ -95,9 +95,10 @@ class Manager {
   }
 
   goToSection = (id) => {
+    const container = this.config.container
     let element = this.anchors[id]
-    let viewHeight = this.config.container.innerHeight || this.config.container.clientHeight
-    let offset = this.config.offset + viewHeight/2
+    let viewHeight = container.innerHeight || container.clientHeight
+    let offset = this.config.offset + viewHeight / 2 - getOffsetTopToBody(container)
     if (element) {
       this.config.scroller.center(element, this.config.scrollDuration, offset)
     } else {

@@ -13,7 +13,6 @@
     "watch": "babel src --out-dir lib --source-maps inline --watch",
     "example": "cd example && npm i; npm run start",
     "lint": "eslint src",
-    "test": "mocha --compilers js:babel/register --recursive src/**/*-test.js",
     "prepublish": "npm run clean && npm run build"
   },
   "keywords": [
@@ -63,7 +62,6 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
     "expect": "^1.13.4",
-    "mocha": "^2.2.5",
     "rimraf": "^2.5.0"
   }
 }
