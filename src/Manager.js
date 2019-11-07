@@ -95,18 +95,16 @@ class Manager {
   }
 
   goToSection = (id) => {
-    const container = this.config.container
     let element = this.anchors[id]
-    let viewHeight = container.innerHeight || container.clientHeight
-    let offset = this.config.offset + viewHeight / 2 - getOffsetTopToBody(container)
+    let scrollTo = element ? element.offsetTop - this.config.offset : 0
     if (element) {
-      this.config.scroller.center(element, this.config.scrollDuration, offset)
+      this.config.scroller.toY(scrollTo)
     } else {
       // make sure that standard hash anchors don't break.
       // simply jump to them.
       element = document.getElementById(id)
       if (element) {
-        this.config.scroller.center(element, 0, this.config.offset)
+        this.config.scroller.to(element)
       }
     }
   }
