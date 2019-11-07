@@ -43,7 +43,7 @@ class Manager {
 
   configure = (config) => {
     this.config = {
-      ...defaultConfig,
+      ...this.config,
       ...config
     }
   }
